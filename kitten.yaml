@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Kittens Carousel
+  Static Website Application
+Parameters:
+  LatestAmiId:
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+
+Resources:
+  Kittens-project:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+
+      InstanceType: t2.micro
+
+      KeyName: firstkey
+
+      SecurityGroups:
+        - !Ref kittenscr
+
+      Tags:
+        - Key: Name
+          Value: Web Server of StackName
+
+      UserData:
+        Fn::Base64:
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd wget
+          mkdir /var/www/html
+          wget https://github.com/clarusway/clarusway-aws-devops-tr-16/blob/main/aws/projects/101-kittens-carousel-static-website-ec2/static-web/index.html -O /var/www/html/index.html
+          service httpd start
+          chkconfig httpd on
+
+  kittenscr:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: accessible via web browser from anywhere.
+
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
