@@ -8,7 +8,7 @@ Parameters:
     Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 
 Resources:
-  Kittens-project:
+  KittensProject:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref LatestAmiId
