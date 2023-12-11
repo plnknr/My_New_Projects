@@ -27,12 +27,15 @@ Resources:
       UserData:
         Fn::Base64:
           #!/bin/bash
-          yum update -y
-          yum install -y httpd wget
-          mkdir /var/www/html
-          wget https://github.com/clarusway/clarusway-aws-devops-tr-16/blob/main/aws/projects/101-kittens-carousel-static-website-ec2/static-web/index.html -O /var/www/html/index.html
-          service httpd start
-          chkconfig httpd on
+          sudo yum update -y
+          sudo yum install -y httpd wget
+          sudo systemctl start httpd
+          sudo systemctl enable httpd
+          sudo chmod -R 755 /var/www/html/
+          wget https://raw.githubusercontent.com/plnknr/My_New_Projects/main/static-web/index.html
+          wget https://raw.githubusercontent.com/plnknr/My_New_Projects/main/static-web/cat0.jpg
+          wget https://raw.githubusercontent.com/plnknr/My_New_Projects/main/static-web/cat1.jpg
+          wget https://raw.githubusercontent.com/plnknr/My_New_Projects/main/static-web/cat2.jpg
 
   kittenscr:
     Type: AWS::EC2::SecurityGroup
@@ -43,4 +46,8 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
           CidrIp: 0.0.0.0/0
